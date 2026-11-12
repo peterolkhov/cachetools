@@ -1,0 +1,48 @@
+name: cachetools suspended iterator native diagnosis
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/diagnose-suspended-iterator-time]
+permissions:
+  contents: read
+jobs:
+  native-before:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: tkem/cachetools
+          ref: 1ce79efa552d1bdda70d144d401ef9105d999184
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - name: Freeze public diagnostic and exact full source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PYASSETS'
+          from pathlib import Path
+          import base64,json,zlib,os
+          assets=json.loads(zlib.decompress(base64.b64decode('eNrlWW1P4zoW/iu5fHEyEzJtaQdalA8st+ytNMColKuVKBs5iUuzpEnWTqBc1P++59hO6nZamLszK612i9Qm9nn343OOzevBLFmWFWcHA+tgKv8ukiwpmVVUYZpEh2dfR1ac0IcsF4kYWEkWs4LBV1ZanNFYWM/zJGUWzSxg4rTMuZUIS1RCUsWekjnNplmyKHJeWv8Q+fqlAlUlEyXOz3i+sCIazVmZ56mwNMlk8uUcB11r8mV8Kx+ReppFKRXCuqRZRdNJsmB8MM0s+MRsZgUBOhEEtmDpzNET+MF3L8ufLd9qoZA1Q0TTdAcDZxCdrOFTqpFjQR9ZIM21HyEqNU+JloB0wy7bUVPJzEJKy/et6UFZptMDQ4+UBHy1u/aCLkXyB/M7rgW0fttVon35rSWyVLBdMupAbQqp/JQuwphawaNrBU+uBf4M8Mv6aO0UL+XdTQEiHJbo4N5Cw+XL4RNNK4bratIJFuVZXBOqt01KHc1ILajUZS7mTQ2bkcbSGCFm1yjxJvB1TgVzjKUGSdFjwJZFwlkcPCflPK/KoAajXE/XMleosdhtFmt7LdeEkkIDprMFI7CY8XIkrvKM2ZLbe2ClvY6D4+zkuMrLUWaQucocx8Tjpld0Bu7A25xWooT3n+WdYdTwnwBXkFcqTxzXem0W3rXWxq7+a4JjpKIARf9gLKKKixxJMLh2rbSefUlYCriE6YwtIUaS2JjPy7mUvzYct3vD1WwcGMdNu359N5olfzHckbpCCNSTNGYdWGmAYdAsySChbbMqu70ozQWzDWoFMDn8ptSCJ1lpYwr34mpRCBtAgnGEVCYjj0jJCwRnAlkeBqcHIEYhiNPnAH3E4cZXd9O+zc/0QAcQWfSj1IBW4Zh8wBFZhIKm6sg5HaV3NBieI5fxunItiFUZPLIX4U94xfYgVmPc4HyTrrbrHUQv2CJkXMyT4v8S2EptokvFz4H1Ppn/BqghEiVNMvG/jewLCiv6PrAV2U5cY9UOoH0JsrwpWgEGj+fp7t7snXKuG6cdSlJe/UwtIG6nGvDl2zr8Z5TtreVvu/afU/qGp7tK7B5N26Rve/Njgr/T4q0U+h3yDY7vt/9H1dTeQCo5eKgoj/Eopg8/4kW4mJjcORXzNAndXLiiCgueR0wIfWYqaIlz9YHpK7xOs6+jK5+0I3bcZzPa63XidhjH9LgVt7vduNtqs1m/3erF/X6/fdIl02wyHg59ctQ+Zp3+56O4E3c6rEt7R/1OJzyiJy3Kjo+P4feoF7W6fWC4GP1tcjsGnrDf7XaPZ33WjvtHlPY+H3eOTmIatnv9zye9MKS0Q0MWHXdntN+ivX6rBUp7oOM4DNlJNyTqPPWQlPYHyh+EM6jPXI2jOoawR4uqtO8I0BJXEt9D4FQWkgIIZ0+HBeWCEZf8Njz7lTheDHUrhrLgiZJDxB3fh9i8zfX315IzttrJjIHa5H7msJ0OkeMNBsMZXmW1DyROZjP4OTxky6Q8RNbacBwk9670XCVpODVDpJa+VJqKwxlUBiHpREkfkPHwD+KccrCAx8K/uwd8QOHnUHih6EleTxQpcEPMpy0ikQrFPMtLJBpgPkmyCivjgpXUzeiC+TBhMIHJbed0AWa6YZqHrlTsI7Umck51ZNSMH5IWrK+EqI/AtHPhzYQOEipwwGD67MthlslheMarhTTJHm1kdBy0EpWivHanBR+iug2clsRB+AK7U9Z+bYDeMZ6Y0zbYjuZa5COsip2yzAadjuNphc5HFZCPOOrN2TJOHmCr4+IhW7OmLnJLi0CNDrNHC9zW9h06g7xAZqju9D7b21INzG5R1hFi2VPC8+yOjG+vrobjYDK8/ApYILJxOdQ3Nl7xAngznd+yXe9QwF5JS+a/kjnQkgGg3yUSrQOEpksUjgYyLMopxyUSLoGyiwy27JSTG9rANkAPJrc9LEZ7pZW4gsGewyokfBvA65IBMdZkS7x2uhGvnVsBxv23w+Z80nETecUj5qElgEmAFGRXD5LI01373oc8xmC3QFBmntzQQYn9sGG2jCJ2SvLWZQ1zCK0vydIcLytmakkkN1Kr7pKcn53/Ngyuziaj34fBX2/Pxr8CGs2ekxQQMVBvGOV++CDlrxx3llZiXqcBrBSQRDLGjVKhfjDiVZmkbpKrwiGXZYnjTQ3BolJfqUBBeauK6Jf1rRz4Q6NH3Noy6OsJLwgQR0GAkBR5+oQ5ENYXIAEAlJGXLF70HNuwJIJHn9bcpNkRUizGoOAM1tyUloiAsxS68CdYnNy2TXFemS+JQey4axnTDIKFfXmTEtFXzInYBbPY1sDgD7DZbfJBbiyZHGt1vs4za+WKxTlNcHOlKYt9HZdPNdU6EzU0G5vV979JXjK/1Pwyxyi76xwDGAEWMqhJoP8OilwkmHPI3q26S/nG5lrtQSnsosnocvgNTmVQFVDVs0u08zAoM6R8cZrMot3YhvF3b1wj4QGWChb5m2D3cCxAFCsMpnkkz2q24g8ytWxaDHFnsoRVKduWo0aVJJRp45dzit9yd8PJji1BlaKz1Y+DxR0Sht9cU0I7Q6u0xNvKL4oLmfFVXIDoyw3u04gWaJaf5N4N9AzZw+ga6xgeSqz17oXli6GVjyDBljE0QrZmw25JgDLfuCRdStVjmSHsJ8ZDwEj54ncc2XpIY0GB6qZ8LQeve+RVLZRwBQY1v7lk9SHPvzMyHhRq5li4r/AJ95ViVS0BjgHisITjI/RFlJcCvbPJK3HuMXqLBeUvUKDQfsSL9MiTb+AF4IgmKdgIU3cIMJxQCmUKC1Cl5qkpoVgyzqG0vM+i6IBBPCawz+L3OTQhsNTxIIP6abV7L13/5WY4/h2er68295N2fmtr6MyxFQjfP7FoFluqUm/4C+mkK+dkM2c6tj2qjYcytgRYQ/rTcd914IOavPfM1sztPXXt5TZIVo2vrxK8AX5fMjiPx1fQUL29yCvfr51oxGBsmquIOiivNr8jeJUDTRQ8NZc5kGOkBnkr1Kyg77/aBNwC+9FPx63f6lsfNQRemRTqdU2y0t23KXqwLgpgRn1tRKD76Eg7YVBfBpH7X3y0FK+ByL3q0zcth44FdQ/W8rauipBkLeIjUf+JIbUi41qH3OP/7PB2EhSZ3c0uoUiKKN0rR14HKeflykkY7lg9Ixg2OZMP4NgQqQcE6SWjI/XYZPJSsHoO0bw9P2YzBs1GtJto96a8uL4dB2c3sDMnwcXZ6Av0kzdq8Pz6ajK+/nKDDxej8eUQzmObLdjqXxb48vE=')))
+          for name,value in assets.items():Path(os.environ['RUNNER_TEMP'],'cache-'+name+'.py').write_text(value)
+          PYASSETS
+          python "$RUNNER_TEMP/cache-guard.py" before
+      - name: Install official tox runner and run existing timed-cache baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --no-cache-dir tox
+          tox -e py -- tests/test_ttl.py tests/test_tlru.py -q
+          python "$RUNNER_TEMP/cache-guard.py" after-baseline
+      - name: Execute exact finite public fixture in native tox environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          tox exec -e py -- python "$RUNNER_TEMP/cache-runner.py"
+          python "$RUNNER_TEMP/cache-guard.py" after-fixture
+      - name: Verify complete unchanged source and frozen fixture
+        if: always()
+        shell: bash
+        run: python "$RUNNER_TEMP/cache-guard.py" final
